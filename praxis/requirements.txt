@@ -1,0 +1,41 @@
+# Core dependencies for Praxis MVP v0.3
+# Phase 2 implementation - synchronous processing (Job queue deferred to Phase 3)
+
+# Web framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9  # PostgreSQL driver
+
+# Data analysis tools
+pandas==2.1.4
+numpy==1.26.3
+openpyxl==3.1.2
+
+# Document generation
+python-docx==1.1.0
+python-pptx==0.6.23
+
+# Visualization
+matplotlib==3.8.2
+seaborn==0.13.1
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+httpx==0.26.0
+
+# Utilities
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+uuid6==2024.1.12
+
+# Optional: for future phases
+# pgvector==0.2.4  # KnowledgeBase vector search (Phase 3)
+# redis==5.0.1     # Job queue (Phase 3)
+# celery==5.3.4    # Async task processing (Phase 3)
