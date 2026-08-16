@@ -1,0 +1,54 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'praxis/src/**'
+      - 'praxis/requirements.txt'
+      - 'praxis/docker/Dockerfile.backend'
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  SERVICE_NAME: praxis-backend
+  REGION: europe-west1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -f praxis/docker/Dockerfile.backend \
+            -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/praxis-repo/praxis-backend:${{ github.sha }} \
+            -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/praxis-repo/praxis-backend:latest \
+            ./praxis
+
+      - name: Push to Artifact Registry
+        run: docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/praxis-repo/praxis-backend --all-tags
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/praxis-repo/praxis-backend:${{ github.sha }} \
+            --platform managed \
+            --region $REGION \
+            --allow-unauthenticated \
+            --set-env-vars DATABASE_URL=${{ secrets.DATABASE_URL }},SECRET_KEY=${{ secrets.SECRET_KEY }} \
+            --memory 512Mi \
+            --cpu 1 \
+            --min-instances 0 \
+            --max-instances 10
