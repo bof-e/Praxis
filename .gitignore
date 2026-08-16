@@ -1,53 +1,45 @@
 ```
 # Dependencies
 node_modules/
-venv/
-.venv/
 __pycache__/
-.mypy_cache/
-.pytest_cache/
-.julia/
-zig*/
-
-# Build artifacts
-dist/
-build/
-target/
-.gradle/
-
-# Python
 *.pyc
 *.pyo
 *.pyd
-*.so
-*.egg-info/
-.Python
-
-# Logs and temporary files
-*.log
-*.tmp
-*.swp
-*.swo
-
-# Environment variables
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
 .env
 .env.local
 *.env.*
+
+# Build outputs
+dist/
+build/
+target/
+coverage/
+htmlcov/
+.next/
+out/
+
+# Database
+praxis.db
+
+# Logs
+*.log
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Editors
+# Editor files
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Compressed files
+# Compression files
 *.zip
 *.gz
 *.tar
